@@ -25,7 +25,7 @@ export default function HomeScreen() {
             <HelloWave />
           </ThemedView>        
         </ThemedView>  
-        <ThemedView style={{flex: 1, justifyContent: 'center'}}>
+        <ThemedView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Link style={styles.btn} href="/StopGame" >Start Play Stop Game</Link>
           <Link style={styles.btn} href="/">Create a Group</Link>
         </ThemedView>              
@@ -40,7 +40,8 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30
+    marginTop: 30,
+    
   },
   info: {
     flexDirection: 'column'

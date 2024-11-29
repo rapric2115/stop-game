@@ -54,9 +54,15 @@ const StopGame = () => {
       )}
       
       {/* Pressable button */}
-      <Pressable onPress={pickRandomLetter} style={styles.btn}>
-        <ThemedText>Pick a Letter</ThemedText>
-      </Pressable>
+      {pickedLetter ? (
+        <Pressable onPress={() => setPickedLetter('')} style={styles.btn}>
+          <ThemedText>Reset</ThemedText>
+        </Pressable>
+      ) : (
+        <Pressable onPress={pickRandomLetter} style={styles.btn}>
+          <ThemedText>Pick a Letter</ThemedText>
+        </Pressable>
+      )}
       {pickedLetter ? (
         <StopGameForm />
       ) : null}

@@ -1,15 +1,19 @@
-import { StyleSheet, TextInput, Pressable } from 'react-native';
+import { StyleSheet, TextInput, Pressable, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
+import ModalView from '@/components/ModalView';
 
 const categories = [
   { label: 'Name', placeholder: 'Enter your name' },
+  { label: 'Last Name', placeholder: 'Enter your last name' },
   { label: 'Animal', placeholder: 'Enter an animal' },
   { label: 'Color', placeholder: 'Enter a color' },
   { label: 'Country', placeholder: 'Enter a country' },
   { label: 'Food', placeholder: 'Enter your favorite food' },
 ];
+
+const WIDTH = Dimensions.get('screen').width;
 
 const StopGameForm = () => {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
@@ -17,6 +21,7 @@ const StopGameForm = () => {
   const [timer, setTimer] = useState(90);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [gameOver, setGameOver] = useState(false); // New state to track game over
+  const [openModal, setOpenModal] = useState(false);
 
   // Timer effect
   useEffect(() => {
@@ -40,7 +45,7 @@ const StopGameForm = () => {
       setIsTimeUp(false); // Reset time up status
     } else {
       // All categories completed
-      alert('All categories completed! Here are your answers:\n' + userAnswers.join('\n'));
+      setOpenModal(true);      
       setGameOver(true); // Set game over state
     }
   };
@@ -79,6 +84,15 @@ const StopGameForm = () => {
           <ThemedText>{currentCategoryIndex === categories.length - 1 ? 'Stop' : 'Next'}</ThemedText>
         </Pressable>
       </ThemedView>
+      
+      {/* Pass userAnswers and openModal state to ModalView */}
+      {openModal === true ? (
+        <ModalView 
+            userAnswers={userAnswers.join('\n')} 
+            visible={openModal} 
+            onClose={() => setOpenModal(false)} 
+        />
+      ) : null}
     </ThemedView>
   );
 };
@@ -105,11 +119,11 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
+    width: WIDTH * .7, 
     borderColor: '#fff',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    width: '100%',
     marginBottom: 20,
     color: '#fff',
     backgroundColor: '#444',
@@ -120,12 +134,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btn: {
-    backgroundColor: '#000',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginHorizontal: 10,
-  },
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+},
   
 // New style for red button when finishing the game
 btnRed: {

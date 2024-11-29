@@ -1,45 +1,76 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet, Text } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+import Feather from '@expo/vector-icons/Feather';
+import Foundation from '@expo/vector-icons/Foundation';
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+export default function TabLayout() {
+    const colorScheme = useColorScheme();
+
+    const tabsNav = [
+        {
+            name: 'index',
+            title: 'Home',
+            iconName: 'home',
+            icon: Feather 
+        },
+        {
+            name: 'Trophy',
+            title: 'Trophic',
+            iconName: 'trophy',
+            icon: Foundation            
+        },
+        {
+            name: 'StopGame',
+            title: 'Stop the Game',
+            href: null
+        }
+    ]
+
+    return(
+        <Tabs
+            screenOptions={{
+                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                headerShown: false,
+                tabBarButton: HapticTab,
+                tabBarBackground: TabBarBackground,
+                tabBarStyle: Platform.select({
+                    ios: {
+                        position: 'absolute',
+                    },
+                    default: {}
+                }),
+            }}
+        >
+            {tabsNav.map((tab) => (
+                <Tabs.Screen
+                    key={tab.name}
+                    name={tab.name}
+                    options={{
+                        title: tab.title,
+                        tabBarIcon: ({ color }) => (
+                            <Text style={styles.icon}>
+                                <tab.icon name={tab.iconName} size={28} color={color} /> {/* Correct usage */}
+                            </Text>
+                        ),
+                        href: tab.href // Keep href here for navigation
+                    }}
+                />
+            ))}
+
+        </Tabs>
+    )
 }
+
+const styles = StyleSheet.create({
+    icon: {
+        justifyContent: 'center',
+        alignSelf: 'center'
+    }
+})

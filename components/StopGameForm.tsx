@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import ModalView from '@/components/ModalView';
+import { calculateScore } from '@/scripts/scoring';
 
 const categories = [
   { label: 'Name', placeholder: 'Enter your name' },
@@ -15,13 +16,14 @@ const categories = [
 
 const WIDTH = Dimensions.get('screen').width;
 
-const StopGameForm = () => {
+const StopGameForm = ({selectedLetter}: any) => {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
   const [timer, setTimer] = useState(90);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [gameOver, setGameOver] = useState(false); // New state to track game over
   const [openModal, setOpenModal] = useState(false);
+  const [points, setPoints] = useState(0);
 
   // Timer effect
   useEffect(() => {
@@ -45,6 +47,7 @@ const StopGameForm = () => {
       setIsTimeUp(false); // Reset time up status
     } else {
       // All categories completed
+      calculatePoints();
       setOpenModal(true);      
       setGameOver(true); // Set game over state
     }
@@ -58,6 +61,18 @@ const StopGameForm = () => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[currentCategoryIndex] = text;
     setUserAnswers(updatedAnswers);
+  };
+
+  const calculatePoints = () => {
+    let totalPoints = userAnswers.reduce((accumulatedPoints, answer) => {
+      const { categoryType } = categories[currentCategoryIndex]; // Get details for current category
+      
+      const score = calculateScore(answer, selectedLetter, categoryType); // Calculate score using imported function
+      
+      return accumulatedPoints + score; 
+    }, 0);
+
+    setPoints(totalPoints); 
   };
 
   return (
@@ -88,6 +103,7 @@ const StopGameForm = () => {
       {/* Pass userAnswers and openModal state to ModalView */}
       {openModal === true ? (
         <ModalView 
+            score={points}
             userAnswers={userAnswers.join('\n')} 
             visible={openModal} 
             onClose={() => setOpenModal(false)} 

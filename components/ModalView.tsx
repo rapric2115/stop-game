@@ -3,7 +3,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('screen').width;
 
-const ModalView = ({ userAnswers, visible, onClose }: any) => {
+const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
   
     return (
         <SafeAreaProvider>
@@ -18,6 +18,9 @@ const ModalView = ({ userAnswers, visible, onClose }: any) => {
                     }}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
+                            <Text style={styles.modalScrore}>
+                               Your Scrore is: {score}
+                            </Text>
                             <Text style={styles.modalText}>
                                 {userAnswers}
                             </Text>
@@ -58,6 +61,10 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    modalScrore: {
+        fontSize: 25,
+        fontWeight: 'bold'
+    },
     
 // Button styles for closing modal    
 btnClose:{
@@ -66,7 +73,8 @@ btnClose:{
 btn: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
+    width: WIDTH * .7
 },
 // Styles for text in modal    
 textStyle:{

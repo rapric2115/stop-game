@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 const StopGame = () => {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Fixed letters string
-  const [pickedLetter, setPickedLetter] = useState('');
+  const [pickedLetter, setPickedLetter] = useState<string>('');
   const [displayedLetter, setDisplayedLetter] = useState('');
 
   // Random pick a letter and start animation
@@ -64,7 +64,7 @@ const StopGame = () => {
         </Pressable>
       )}
       {pickedLetter ? (
-        <StopGameForm />
+        <StopGameForm selectedLetter={pickedLetter}/>
       ) : null}
       
     </ThemedView>

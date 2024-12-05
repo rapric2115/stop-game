@@ -1,13 +1,18 @@
+import { useState, useEffect, useRef } from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View, Dimensions } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+
 
 const WIDTH = Dimensions.get('screen').width;
 
 const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
+    
+    
   
     return (
         <SafeAreaProvider>
             <SafeAreaView style={styles.centeredView}>
+                           
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -17,7 +22,9 @@ const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
                         onClose(); // Call the passed function to close modal
                     }}>
                     <View style={styles.centeredView}>
+                       
                         <View style={styles.modalView}>
+                            <Text style={styles.modalText}>High Score: 60 points</Text>
                             <Text style={styles.modalScrore}>
                                Your Scrore is: {score}
                             </Text>
@@ -86,5 +93,10 @@ textStyle:{
 modalText:{
    marginBottom:15,
    textAlign:'center'
+},
+lottie: {
+    position: 'absolute',
+    top: 0,
+    left: 0
 }
 });

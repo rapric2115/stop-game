@@ -28,7 +28,7 @@ export default function TabLayout() {
         },
         {
             name: 'StopGame',
-            title: 'Stop the Game',
+            title: 'Stop Game',
             href: null
         }
     ]

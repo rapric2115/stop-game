@@ -11,8 +11,6 @@ const StopGame = () => {
 
   // Random pick a letter and start animation
   const pickRandomLetter = () => {
-    console.log("Button pressed!"); // Debugging log
-    // Ensure letters string is not empty
     if (letters.length === 0) {
       console.error("Letters array is empty");
       return;

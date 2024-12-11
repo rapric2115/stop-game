@@ -30,8 +30,10 @@ export default function HomeScreen() {
    <ThemedView style={styles.container}>      
         <ThemedView style={styles.info}> 
             <ThemedView style={styles.titleContainer}>
-              <ThemedText type="title">Welcome! {userName || 'Guest'}</ThemedText>
-              <HelloWave />
+              <ThemedView style={{width: WIDTH * .9}}>
+                  <HelloWave />              
+                <ThemedText type="title" style={{textAlign: 'center', marginTop: 10}}>Hi, Welcome to The Stop Game! {userName || ''}</ThemedText>
+              </ThemedView>
             </ThemedView>        
               {!userName ? (
                 <>
@@ -49,18 +51,6 @@ export default function HomeScreen() {
                 </>
             ) : (
                 <>
-                <ThemedText style={{textAlign: 'center'}}>Difficulty Level Selected: {gameDifficulty || ''}</ThemedText>
-                <ThemedView style={{flexDirection: 'row', width: WIDTH * .9, justifyContent: 'space-between', marginTop: 20}}>
-                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Easy')}>
-                    <ThemedText style={styles.btnText}>Easy</ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Medium')}>
-                    <ThemedText style={styles.btnText}>Medium</ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Hard')}>
-                    <ThemedText style={styles.btnText}>Hard</ThemedText>
-                  </TouchableOpacity>
-                </ThemedView>
                     <Link style={[styles.btnSubmit, {color: BtnStyle.dark.color}]} href="/StopGame">Start Play Stop Game</Link>
                     {/* <Link style={styles.btn} href="/">Create a Group</Link> */}
                 </>

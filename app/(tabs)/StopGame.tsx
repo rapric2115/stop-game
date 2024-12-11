@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import StopGameForm from '@/components/StopGameForm';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { BtnStyle } from '@/constants/Colors';
+import { useUserContext } from '@/constants/context/userContext';
+
+const WIDTH = Dimensions.get('window').width;
 
 const StopGame = () => {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Fixed letters string
   const [pickedLetter, setPickedLetter] = useState<string>('');
   const [displayedLetter, setDisplayedLetter] = useState('');
   const [pressed, setPressed] = useState<boolean>(true);
+  const { setGameDifficulty, gameDifficulty } = useUserContext();
 
   // Random pick a letter and start animation
   const pickRandomLetter = () => {
@@ -60,9 +65,23 @@ const StopGame = () => {
         </Pressable>
       ) : (
         pressed ? (
+        <>
+        <ThemedText style={{textAlign: 'center'}}>What difficulty Level you want's to play: </ThemedText>
+          <ThemedView style={{flexDirection: 'row', width: WIDTH * .9, justifyContent: 'space-between', marginTop: 20}}>
+            <Pressable style={[styles.btnSubmit, {backgroundColor: gameDifficulty === 'Easy' ? BtnStyle.dark.orange : BtnStyle.dark.background}]} onPress={() => setGameDifficulty('Easy')}>
+              <ThemedText style={styles.btnText}>Easy</ThemedText>
+            </Pressable>
+            <Pressable style={[styles.btnSubmit, {backgroundColor: gameDifficulty === 'Medium' ? BtnStyle.dark.orange : BtnStyle.dark.background}]} onPress={() => setGameDifficulty('Medium')}>
+              <ThemedText style={styles.btnText}>Medium</ThemedText>
+            </Pressable>
+            <Pressable style={[styles.btnSubmit, {backgroundColor: gameDifficulty === 'Hard' ? BtnStyle.dark.orange : BtnStyle.dark.background}]} onPress={() => setGameDifficulty('Hard')}>
+              <ThemedText style={styles.btnText}>Hard</ThemedText>
+            </Pressable>
+          </ThemedView>
         <Pressable onPress={pickRandomLetter} style={styles.btn}>
           <ThemedText>Pick a Letter</ThemedText>
         </Pressable>
+        </>
         ) : null
       )}
       {pickedLetter ? (
@@ -97,5 +116,19 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginVertical: 20,
+  },
+  btnSubmit: {
+    width: WIDTH * .25,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    alignSelf: 'center',
+    textAlign: 'center',
+    // backgroundColor: BtnStyle.dark.background,
+    marginTop: 25
+  },
+  btnText: {
+    color: BtnStyle.dark.color,
+    textAlign: 'center',
   },
 });

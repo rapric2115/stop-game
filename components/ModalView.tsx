@@ -1,12 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View, Dimensions } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { useUserContext } from '@/constants/context/userContext';
 
 const WIDTH = Dimensions.get('screen').width;
 
 const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
-    
+    const { gameDifficulty } = useUserContext();
+    const [highScore, setHighScore] = useState('40')
+
+    useEffect(() => {
+        if (gameDifficulty === 'Easy') {
+            setHighScore('400')
+        } else if (gameDifficulty === 'Medium') { 
+            setHighScore('500')
+        } else {
+            setHighScore('700')
+        }
+    }, [gameDifficulty]);
     
   
     return (
@@ -24,7 +35,7 @@ const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
                     <View style={styles.centeredView}>
                        
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>High Score: 60 points</Text>
+                            <Text style={styles.modalText}>The High Score is: {highScore} points</Text>
                             <Text style={styles.modalScrore}>
                                Your Scrore is: {score}
                             </Text>

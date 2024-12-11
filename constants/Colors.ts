@@ -25,6 +25,7 @@ export const BtnStyle = {
     },
     dark: {
         color: tintColorDark,
-        background: '#000'
+        background: '#000',
+        orange: '#FF8200'
     }
 }

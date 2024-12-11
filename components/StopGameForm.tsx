@@ -12,22 +12,28 @@ import LottieView from 'lottie-react-native';
 import { useUserContext } from '../constants/context/userContext';
 import { categoriesByDifficulty } from '@/constants/responses/categoriesByDifficulty';
 
-const categories = [
-  { label: 'Name', placeholder: 'Enter your name' },
-  { label: 'Lastname', placeholder: 'Enter your last name' },
-  { label: 'Animal', placeholder: 'Enter an animal' },
-  { label: 'Color', placeholder: 'Enter a color' },
-  { label: 'Country', placeholder: 'Enter a country' },
-  { label: 'Food', placeholder: 'Enter your favorite food' },
-];
+// const categories = [
+//   { label: 'Name', placeholder: 'Enter your name' },
+//   { label: 'Lastname', placeholder: 'Enter your last name' },
+//   { label: 'Animal', placeholder: 'Enter an animal' },
+//   { label: 'Color', placeholder: 'Enter a color' },
+//   { label: 'Country', placeholder: 'Enter a country' },
+//   { label: 'Food', placeholder: 'Enter your favorite food' },
+// ];
 
 const WIDTH = Dimensions.get('screen').width;
 const HEIGHT = Dimensions.get('screen').height;
 
+interface Category {
+  label: string;
+  placeholder: string;
+}
 
 const StopGameForm = ({selectedLetter}: string) => {
+
+
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
+  // const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
   const [timer, setTimer] = useState(90);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [gameOver, setGameOver] = useState(false); // New state to track game over
@@ -35,15 +41,39 @@ const StopGameForm = ({selectedLetter}: string) => {
   const [points, setPoints] = useState(0);
   const [letterPicked, setLetterPicked] = useState({});
   const [confettiAnimation, setConfettiAnimation] = useState<Boolean>(false);
-  const { setScore, addScore } = useUserContext();
+  const { setScore, addScore, gameDifficulty } = useUserContext();
+  const [categories, setCategories ] = useState<Category[]>([
+    { label: 'Name', placeholder: 'Enter your name' },
+    { label: 'Lastname', placeholder: 'Enter your last name' },
+    { label: 'Animal', placeholder: 'Enter an animal' },
+    { label: 'Color', placeholder: 'Enter a color' },
+  ]);
+  const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
+  const [highScore, setHighScore] = useState(200);
 
   //confetti Animation and Setups
   const confettiRef = useRef(null);
 
-  const easy = categoriesByDifficulty.easy;
+  const lowerCase = gameDifficulty.toLowerCase();
 
-  console.log(easy)
-   
+
+  useEffect(() => {
+    if (gameDifficulty === 'Easy') {
+      const easy = categoriesByDifficulty.easy;
+      setCategories(easy);
+      setHighScore(200)
+    } else if (gameDifficulty === 'Medium') { 
+      const medium = categoriesByDifficulty.medium;
+      setCategories(medium);
+      setHighScore(300)
+    } else {
+      const hard = categoriesByDifficulty.hard;
+      setCategories(hard);
+      setHighScore(500)
+    }
+    
+  }, [gameDifficulty]);
+
 
   // Timer effect
   useEffect(() => {
@@ -113,11 +143,9 @@ const StopGameForm = ({selectedLetter}: string) => {
 
           if (letterPicked[categoryKey]) {
             if (letterPicked[categoryKey].includes(answer)) {
-              score += 5
-              console.log('get score of 5')
+              score += 50
             } else { 
-              score += 10
-              console.log('get score of 10')
+              score += 100
             }
           }
           
@@ -132,10 +160,10 @@ const StopGameForm = ({selectedLetter}: string) => {
     addScore(score);
   };
 
+  
   useEffect(() => {
-    if (points >= 30) {
+    if (points >= highScore) {
         setConfettiAnimation(true);
-        console.log('animation trigger at form ' + points);
         confettiRef.current?.play();
     } else {
       setConfettiAnimation(false)

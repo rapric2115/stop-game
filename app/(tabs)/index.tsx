@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Platform, ScrollView, Dimensions, TextInput, Button } from 'react-native';
+import { StyleSheet, Platform, TouchableOpacity, Dimensions, TextInput, Button } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,15 +8,17 @@ import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router'
 
 import { useUserContext } from '../../constants/context/userContext';
+import { BtnStyle } from '../../constants/Colors';
 
 // importing Components
-import { Colors } from '../../constants/Colors';
+
 
 const WIDTH = Dimensions.get('screen').width;
 
 export default function HomeScreen() {
   const {userName, setUserName } = useUserContext();
   const [inputValue, setInputValue] = useState<string>('');
+ 
 
   const handleNameSubmit = () => {
       setUserName(inputValue);
@@ -36,15 +38,19 @@ export default function HomeScreen() {
                     <TextInput
                         style={styles.input}
                         placeholder="What's your name"
+                        placeholderTextColor="#FFFFFF"
                         value={inputValue}
                         onChangeText={setInputValue}
                     />
-                    <Button title="Save your Name" onPress={handleNameSubmit} />
+                    
+                     <TouchableOpacity style={styles.btnSubmit} onPress={handleNameSubmit}>
+                        <ThemedText style={styles.btnText}>What's your Name</ThemedText>
+                    </TouchableOpacity>
                 </>
             ) : (
                 <>
                     <Link style={styles.btn} href="/StopGame">Start Play Stop Game</Link>
-                    <Link style={styles.btn} href="/">Create a Group</Link>
+                    {/* <Link style={styles.btn} href="/">Create a Group</Link> */}
                 </>
             )}  
         </ThemedView>
@@ -82,6 +88,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     marginBottom: 20
+  },
+  btnText: {
+    color: BtnStyle.dark.color,
+    textAlign: 'center',
+  },
+  btnSubmit: {
+    width: WIDTH * .65,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    alignSelf: 'center', 
+    backgroundColor: BtnStyle.dark.background,
+    marginTop: 25
   },
   input: {
     borderWidth: 1,

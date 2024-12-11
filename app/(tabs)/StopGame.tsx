@@ -8,6 +8,7 @@ const StopGame = () => {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Fixed letters string
   const [pickedLetter, setPickedLetter] = useState<string>('');
   const [displayedLetter, setDisplayedLetter] = useState('');
+  const [pressed, setPressed] = useState<boolean>(true);
 
   // Random pick a letter and start animation
   const pickRandomLetter = () => {
@@ -22,6 +23,7 @@ const StopGame = () => {
     
     // Start the animation
     animateLetters(selectedLetter);
+    setPressed(false);
   };
 
   const animateLetters = (selectedLetter) => {
@@ -53,13 +55,15 @@ const StopGame = () => {
       
       {/* Pressable button */}
       {pickedLetter ? (
-        <Pressable onPress={() => setPickedLetter('')} style={styles.btn}>
+        <Pressable onPress={() => {setPickedLetter(''), setPressed(true)}} style={styles.btn}>
           <ThemedText>Reset</ThemedText>
         </Pressable>
       ) : (
+        pressed ? (
         <Pressable onPress={pickRandomLetter} style={styles.btn}>
           <ThemedText>Pick a Letter</ThemedText>
         </Pressable>
+        ) : null
       )}
       {pickedLetter ? (
         <StopGameForm selectedLetter={pickedLetter}/>

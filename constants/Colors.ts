@@ -19,3 +19,12 @@ export const Colors = {
     }
 }
 
+export const BtnStyle = {
+    light: {
+        color: tintColorLight
+    },
+    dark: {
+        color: tintColorDark,
+        background: '#000'
+    }
+}

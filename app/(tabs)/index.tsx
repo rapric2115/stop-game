@@ -16,7 +16,7 @@ import { BtnStyle } from '../../constants/Colors';
 const WIDTH = Dimensions.get('screen').width;
 
 export default function HomeScreen() {
-  const {userName, setUserName } = useUserContext();
+  const {userName, setUserName, setGameDifficulty, gameDifficulty } = useUserContext();
   const [inputValue, setInputValue] = useState<string>('');
  
 
@@ -49,7 +49,19 @@ export default function HomeScreen() {
                 </>
             ) : (
                 <>
-                    <Link style={styles.btn} href="/StopGame">Start Play Stop Game</Link>
+                <ThemedText style={{textAlign: 'center'}}>Difficulty Level Selected: {gameDifficulty || ''}</ThemedText>
+                <ThemedView style={{flexDirection: 'row', width: WIDTH * .9, justifyContent: 'space-between', marginTop: 20}}>
+                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Easy')}>
+                    <ThemedText style={styles.btnText}>Easy</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Medium')}>
+                    <ThemedText style={styles.btnText}>Medium</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btn} onPress={() => setGameDifficulty('Hard')}>
+                    <ThemedText style={styles.btnText}>Hard</ThemedText>
+                  </TouchableOpacity>
+                </ThemedView>
+                    <Link style={[styles.btnSubmit, {color: BtnStyle.dark.color}]} href="/StopGame">Start Play Stop Game</Link>
                     {/* <Link style={styles.btn} href="/">Create a Group</Link> */}
                 </>
             )}  
@@ -81,8 +93,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   btn: {
-    width: WIDTH * .45,
-    backgroundColor: '#eee',
+    width: WIDTH * .25,
+    backgroundColor: BtnStyle.dark.background,
     padding: 10,
     borderRadius: 10,
     alignSelf: 'center',
@@ -98,8 +110,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignSelf: 'center', 
+    alignSelf: 'center',
+    textAlign: 'center',
     backgroundColor: BtnStyle.dark.background,
     marginTop: 25
   },

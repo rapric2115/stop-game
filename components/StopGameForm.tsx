@@ -10,6 +10,7 @@ import predeterminedResponse from '@/constants/responses/predeterminedResponses'
 import Confetti from './Confetti';
 import LottieView from 'lottie-react-native';
 import { useUserContext } from '../constants/context/userContext';
+import { categoriesByDifficulty } from '@/constants/responses/categoriesByDifficulty';
 
 const categories = [
   { label: 'Name', placeholder: 'Enter your name' },
@@ -38,6 +39,10 @@ const StopGameForm = ({selectedLetter}: string) => {
 
   //confetti Animation and Setups
   const confettiRef = useRef(null);
+
+  const easy = categoriesByDifficulty.easy;
+
+  console.log(easy)
    
 
   // Timer effect

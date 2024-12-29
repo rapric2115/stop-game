@@ -7,7 +7,6 @@ import LottieView from 'lottie-react-native';
 import { useUserContext } from '@/constants/context/userContext';
 import { FlashList } from '@shopify/flash-list';
 
-
 interface ScoreItem {
     name: string;
     score: number;
@@ -21,13 +20,23 @@ const Trophy: React.FC = () => {
         victoryRef.current?.play();
     }, []);
 
-    // Combine current score with previous scores
-    const allScores: ScoreItem[] = [{ name: userName, score }, ...previousScore.map((prevScore) => ({ name: userName, score: prevScore }))];
-    const totalScore = allScores.reduce<number>((accumulator, current) => {
-        return accumulator + current.score;
-    }, 0)
+    // Determine the scores to display
+    let allScores: ScoreItem[] = [];
+    
+    if (previousScore.length === 0) {
+        // First play
+        allScores = [{ name: userName, score }];
+    } else {
+        // Subsequent plays
+        allScores = [{ name: userName, score }, ...previousScore.map((prevScore) => ({ name: userName, score: prevScore }))];
+    }
 
-    const UserScore = ({ item }: { item: { name: string; score: number } }) => (
+    // Calculate total score
+    const totalScore = allScores.reduce<number>((accumulator, current) => {
+        return accumulator + current.score - score;
+    }, 0);
+
+    const UserScore = ({ item }: { item: ScoreItem }) => (
         <ThemedView style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
             <ThemedText>{item.name}</ThemedText>
             <ThemedText>{item.score}</ThemedText>
@@ -51,7 +60,7 @@ const Trophy: React.FC = () => {
                 <FlashList
                     data={allScores}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <UserScore item={item} />} // Pass entire item object
+                    renderItem={({ item }) => <UserScore item={item} />}
                     estimatedItemSize={10}
                 />
             </SafeAreaView>

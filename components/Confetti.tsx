@@ -8,9 +8,7 @@ interface ConfettiProps {
 
 
 const Confetti: React.FC<ConfettiProps> = ({ highScore }) => {
-    const confettiRef = useRef<LottieView>(null);
-    console.log('confetti animation ', highScore)
-  
+    const confettiRef = useRef<LottieView>(null);  
     useEffect(() => {
         if (highScore === true) {
             confettiRef.current?.play(); // Play animation when highScore is true

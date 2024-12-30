@@ -51,7 +51,7 @@ export default function HomeScreen() {
                 </>
             ) : (
                 <>
-                    <Link style={[styles.btnSubmit, {color: BtnStyle.dark.color}]} href="/StopGame">Start Play Stop Game</Link>
+                    <Link style={[styles.btnSubmit, {color: BtnStyle.dark.color}]} href="/StopGame">Let's Play Stop</Link>
                     {/* <Link style={styles.btn} href="/">Create a Group</Link> */}
                 </>
             )}  

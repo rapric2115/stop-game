@@ -33,12 +33,14 @@ const Trophy: React.FC = () => {
 
     // Calculate total score
     const totalScore = allScores.reduce<number>((accumulator, current) => {
-        return accumulator + current.score - score;
+        return accumulator + current.score + score;
     }, 0);
 
-    const UserScore = ({ item }: { item: ScoreItem }) => (
+    const UserScore = ({ item, index }: { item: ScoreItem, index: number }) => (
         <ThemedView style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-            <ThemedText>{item.name}</ThemedText>
+             <ThemedText>
+            {index === 0 ? `${item.name} your last score was: ` : item.name }
+            </ThemedText>
             <ThemedText>{item.score}</ThemedText>
         </ThemedView>
     );
@@ -60,7 +62,7 @@ const Trophy: React.FC = () => {
                 <FlashList
                     data={allScores}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <UserScore item={item} />}
+                    renderItem={({ item, index }) => <UserScore item={item} index={index}/>}
                     estimatedItemSize={10}
                 />
             </SafeAreaView>

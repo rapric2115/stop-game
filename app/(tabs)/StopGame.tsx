@@ -49,6 +49,11 @@ const StopGame = () => {
     }, intervalTime);
   };
 
+  const handleReset = () => { 
+    setPickedLetter('');
+    setPressed(true);
+  }
+
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.letterText}>{displayedLetter}</ThemedText>
@@ -60,9 +65,7 @@ const StopGame = () => {
       
       {/* Pressable button */}
       {pickedLetter ? (
-        <Pressable onPress={() => {setPickedLetter(''), setPressed(true)}} style={styles.btn}>
-          <ThemedText>Reset</ThemedText>
-        </Pressable>
+        <></>
       ) : (
         pressed ? (
         <>
@@ -78,6 +81,11 @@ const StopGame = () => {
               <ThemedText style={styles.btnText}>Hard</ThemedText>
             </Pressable>
           </ThemedView>
+          {gameDifficulty && ['Easy', 'Medium', 'Hard'].includes(gameDifficulty) ? (
+                <ThemedText style={[styles.instructionText, {marginTop: 20}]}>
+                    Press Pick a letter button
+                </ThemedText>
+            ) : null}
         <Pressable onPress={pickRandomLetter} style={styles.btn}>
           <ThemedText>Pick a Letter</ThemedText>
         </Pressable>
@@ -85,7 +93,7 @@ const StopGame = () => {
         ) : null
       )}
       {pickedLetter ? (
-        <StopGameForm selectedLetter={pickedLetter}/>
+        <StopGameForm selectedLetter={pickedLetter} reset={handleReset}/>
       ) : null}
       
     </ThemedView>

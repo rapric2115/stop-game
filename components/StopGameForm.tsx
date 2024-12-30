@@ -29,20 +29,17 @@ interface Category {
   placeholder: string;
 }
 
-const StopGameForm = ({selectedLetter}: string) => {
-
-
+const StopGameForm = ({ selectedLetter, reset }: { selectedLetter: string; reset: () => void }) => {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
-  // const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
   const [timer, setTimer] = useState(90);
   const [isTimeUp, setIsTimeUp] = useState(false);
-  const [gameOver, setGameOver] = useState(false); // New state to track game over
+  const [gameOver, setGameOver] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [points, setPoints] = useState(0);
   const [letterPicked, setLetterPicked] = useState({});
   const [confettiAnimation, setConfettiAnimation] = useState<Boolean>(false);
   const { setScore, addScore, gameDifficulty } = useUserContext();
-  const [categories, setCategories ] = useState<Category[]>([
+  const [categories, setCategories] = useState<Category[]>([
     { label: 'Name', placeholder: 'Enter your name' },
     { label: 'Lastname', placeholder: 'Enter your last name' },
     { label: 'Animal', placeholder: 'Enter an animal' },
@@ -51,29 +48,25 @@ const StopGameForm = ({selectedLetter}: string) => {
   const [userAnswers, setUserAnswers] = useState(Array(categories.length).fill(''));
   const [highScore, setHighScore] = useState(200);
 
-  //confetti Animation and Setups
+  // Confetti Animation and Setups
   const confettiRef = useRef(null);
 
-  const lowerCase = gameDifficulty.toLowerCase();
-
-
+  // Effect to set categories based on game difficulty
   useEffect(() => {
     if (gameDifficulty === 'Easy') {
       const easy = categoriesByDifficulty.easy;
       setCategories(easy);
-      setHighScore(200)
-    } else if (gameDifficulty === 'Medium') { 
+      setHighScore(20);
+    } else if (gameDifficulty === 'Medium') {
       const medium = categoriesByDifficulty.medium;
       setCategories(medium);
-      setHighScore(300)
+      setHighScore(30);
     } else {
       const hard = categoriesByDifficulty.hard;
       setCategories(hard);
-      setHighScore(500)
+      setHighScore(50);
     }
-    
   }, [gameDifficulty]);
-
 
   // Timer effect
   useEffect(() => {
@@ -97,10 +90,10 @@ const StopGameForm = ({selectedLetter}: string) => {
       setIsTimeUp(false); // Reset time up status
     } else {
       // All categories completed
+      handleCheckAnswers();
       calculatePoints();
       setOpenModal(true);      
       setGameOver(true); // Set game over state
-      handleCheckAnswers();
     }
   };
 
@@ -115,46 +108,39 @@ const StopGameForm = ({selectedLetter}: string) => {
   };
 
   const CheckUserAnswersStartWith = (selectedLetter: string) => {
-    return userAnswers.every((answer) => answer.startsWith(selectedLetter))
-  }
+    return userAnswers.every((answer) => answer.startsWith(selectedLetter));
+  };
 
   useEffect(() => {
     const letter = selectedLetter.toUpperCase();
-    // console.log('letter selected from state gameForm: ', letter)
-    if(letter) {
-      setLetterPicked(predeterminedResponse[letter] || {})
+    if (letter) {
+      setLetterPicked(predeterminedResponse[letter] || {});
     }
-  }, [selectedLetter])
-
-  // console.log('predetermined Responses: ', letterPicked )
-  
+  }, [selectedLetter]);
 
   const handleCheckAnswers = () => {
-    const allStartWithSelectedLetter = CheckUserAnswersStartWith(selectedLetter);
-    let score = 0;
-  
-    if (allStartWithSelectedLetter) {
-      if (letterPicked) { // Check if letterPicked is defined
+    let score = points; // Start with current points
+
+    if (CheckUserAnswersStartWith(selectedLetter)) {
+      if (letterPicked) { 
         userAnswers.forEach((answer, index) => {
           const categoryKey = categories[index].label.toLowerCase();
-
-          console.log('category picked by letter', letterPicked[categoryKey] );
-          console.log('User Answer', answer)
-
           if (letterPicked[categoryKey]) {
-            if (letterPicked[categoryKey].includes(answer)) {
-              score += 50
+            if (answer === '') {
+              score += 0; // Set score to zero if any answer is empty
+              // return; // Exit the loop early since we found an empty answer
+            } else if (letterPicked[categoryKey].includes(answer)) {
+              score += 50; // Correct answer
             } else { 
-              score += 100
+              score += 100; // Incorrect answer
             }
           }
-          
         });
       } else {
         console.warn('letterPicked is undefined or does not have expected structure');
       }
     }
-  
+
     setPoints(score);
     setScore(score);
     addScore(score);
@@ -170,71 +156,69 @@ const StopGameForm = ({selectedLetter}: string) => {
     }
 }, [points]); 
 
+  
+const calculatePoints = () => {
+   let totalPoints = userAnswers.reduce((accumulatedPoints, answer, index) => {
+       const { label } = categories[index];
+       const categoryType = label.toLowerCase();
+       // Calculate score using imported function
+       const score = calculateScore(answer, selectedLetter, categoryType); 
+       
+       return answer.trim() !== '' ? accumulatedPoints + score : accumulatedPoints; 
+   }, points); // Start from current points instead of zero
 
+   setPoints(totalPoints); 
+};
 
-  const calculatePoints = () => {
-    let totalPoints = userAnswers.reduce((accumulatedPoints, answer) => {
-      const { categoryType } = categories[currentCategoryIndex]; // Get details for current category
-      
-      const score = calculateScore(answer, selectedLetter, categoryType); // Calculate score using imported function
-      
-      return accumulatedPoints + score; 
-    }, 0);
-
-    // setPoints(totalPoints); 
-  };
-
-  return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={styles.timerText}>Time Remaining: {timer}s</ThemedText>
-      <ThemedText style={styles.categoryText}>{categories[currentCategoryIndex].label}</ThemedText>
-      <TextInput
-        style={styles.input}
-        placeholder={categories[currentCategoryIndex].placeholder}
-        onChangeText={handleChangeAnswer}
-        value={userAnswers[currentCategoryIndex]}
-        autoFocus
-        editable={!gameOver} // Disable input if game is over
-      />
-      
-      <ThemedView style={styles.buttonContainer}>
-        <Pressable onPress={handleSkip} style={styles.btn}>
-          <ThemedText>Skip</ThemedText>
-        </Pressable>
-        <Pressable 
-          onPress={handleNext} 
-          style={[styles.btn, currentCategoryIndex === categories.length - 1 && styles.btnRed]} // Change color if last category
-          disabled={gameOver} // Disable button if game is over
-        >
-          <ThemedText>{currentCategoryIndex === categories.length - 1 ? 'Stop' : 'Next'}</ThemedText>
-        </Pressable>
-      </ThemedView>
-      
-      {/* Pass userAnswers and openModal state to ModalView */}
-      {openModal === true ? (
-        <ModalView 
-            score={points}
-            userAnswers={userAnswers.join('\n')} 
-            visible={openModal} 
-            onClose={() => {setOpenModal(false); setConfettiAnimation(false);}} 
-        />
-      ) : null}
-      {
-        confettiAnimation === true ?
-        (
-        <LottieView 
-          ref={confettiRef}
-          source={require('../assets/lottieAnimations/confettiAnimation.json')}
-          autoPlay
-          loop
-          style={styles.lottie}
-          />
-        ) : 
-        null
-      }
-      
-    </ThemedView>
-  );
+return (
+   <ThemedView style={styles.container}>
+     <ThemedText style={styles.timerText}>Time Remaining: {timer}s</ThemedText>
+     <ThemedText style={styles.categoryText}>{categories[currentCategoryIndex].label}</ThemedText>
+     <TextInput
+       style={styles.input}
+       placeholder={categories[currentCategoryIndex].placeholder}
+       onChangeText={handleChangeAnswer}
+       value={userAnswers[currentCategoryIndex]}
+       autoFocus
+       editable={!gameOver} // Disable input if game is over
+     />
+     
+     <ThemedView style={styles.buttonContainer}>
+       <Pressable onPress={reset} style={styles.btn}>
+         <ThemedText>Reset game</ThemedText>
+       </Pressable>
+       <Pressable onPress={handleSkip} style={styles.btn}>
+         <ThemedText>Skip</ThemedText>
+       </Pressable>
+       <Pressable 
+         onPress={handleNext} 
+         style={[styles.btn, currentCategoryIndex === categories.length - 1 && styles.btnRed]} 
+         disabled={gameOver} 
+       >
+         <ThemedText>{currentCategoryIndex === categories.length - 1 ? 'Stop' : 'Next'}</ThemedText>
+       </Pressable>
+     </ThemedView>
+     
+     {/* Pass userAnswers and openModal state to ModalView */}
+     {openModal && (
+       <ModalView 
+           score={points}
+           userAnswers={userAnswers.join('\n')} 
+           visible={openModal} 
+           onClose={() => {setOpenModal(false); setConfettiAnimation(false);}} 
+       />
+     )}
+     {confettiAnimation && (
+       <LottieView 
+         ref={confettiRef}
+         source={require('../assets/lottieAnimations/confettiAnimation.json')}
+         autoPlay
+         loop
+         style={styles.lottie}
+       />
+     )}
+   </ThemedView>
+ );
 };
 
 export default StopGameForm;
@@ -274,9 +258,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btn: {
-    borderRadius: 20,
+    // width: WIDTH * .15,
+    borderRadius: 10,
     padding: 10,
-    elevation: 2
+    elevation: 2,
+    backgroundColor: '#687076',
 },
   
 // New style for red button when finishing the game

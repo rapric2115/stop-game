@@ -11,11 +11,11 @@ const ModalView = ({ userAnswers, visible, onClose, score }: any) => {
 
     useEffect(() => {
         if (gameDifficulty === 'Easy') {
-            setHighScore('400')
+            setHighScore('40')
         } else if (gameDifficulty === 'Medium') { 
-            setHighScore('500')
+            setHighScore('50')
         } else {
-            setHighScore('700')
+            setHighScore('70')
         }
     }, [gameDifficulty]);
     

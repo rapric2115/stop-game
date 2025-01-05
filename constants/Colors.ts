@@ -29,3 +29,12 @@ export const BtnStyle = {
         orange: '#FF8200'
     }
 }
+
+export const TextColor = {
+    light: {
+        color: '#000'
+    },
+    dark: {
+        color: '#fff'
+    }
+}

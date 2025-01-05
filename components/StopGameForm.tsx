@@ -5,12 +5,10 @@ import { ThemedText } from '@/components/ThemedText';
 import ModalView from '@/components/ModalView';
 import { calculateScore } from '@/scripts/scoring';
 import predeterminedResponse from '@/constants/responses/predeterminedResponses';
-// import Confetti from 'react-confetti';
-// import ConfettiCanvas, { startAnimation } from 'expo-confetti';
-import Confetti from './Confetti';
 import LottieView from 'lottie-react-native';
 import { useUserContext } from '../constants/context/userContext';
 import { categoriesByDifficulty } from '@/constants/responses/categoriesByDifficulty';
+import { TextColor } from '@/constants/Colors';
 
 // const categories = [
 //   { label: 'Name', placeholder: 'Enter your name' },
@@ -50,6 +48,7 @@ const StopGameForm = ({ selectedLetter, reset }: { selectedLetter: string; reset
 
   // Confetti Animation and Setups
   const confettiRef = useRef(null);
+  const darkTheme = TextColor.dark  ? '#fff' : "#000"
 
   // Effect to set categories based on game difficulty
   useEffect(() => {
@@ -177,6 +176,7 @@ return (
      <TextInput
        style={styles.input}
        placeholder={categories[currentCategoryIndex].placeholder}
+       placeholderTextColor = {darkTheme}
        onChangeText={handleChangeAnswer}
        value={userAnswers[currentCategoryIndex]}
        autoFocus
@@ -258,11 +258,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btn: {
-    // width: WIDTH * .15,
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    backgroundColor: '#687076',
+    backgroundColor: '#000529',
+    color: '#fff',
+    height: 48
 },
   
 // New style for red button when finishing the game

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Platform, TouchableOpacity, Dimensions, TextInput, Button } from 'react-native';
+import { StyleSheet, Platform, TouchableOpacity, Dimensions, TextInput } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,7 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router'
 
 import { useUserContext } from '../../constants/context/userContext';
-import { BtnStyle } from '../../constants/Colors';
+import { BtnStyle, TextColor } from '../../constants/Colors';
 
 // importing Components
 
@@ -24,6 +24,8 @@ export default function HomeScreen() {
       setUserName(inputValue);
       setInputValue(''); // Clear input after submission
   };
+
+  const darkTheme = TextColor.dark ? '#fff' : '#000';
   
   
  return (
@@ -40,7 +42,7 @@ export default function HomeScreen() {
                     <TextInput
                         style={styles.input}
                         placeholder="What's your name"
-                        placeholderTextColor="#FFFFFF"
+                        placeholderTextColor={darkTheme}
                         value={inputValue}
                         onChangeText={setInputValue}
                     />
@@ -103,7 +105,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     backgroundColor: BtnStyle.dark.background,
-    marginTop: 25
+    marginTop: 25,
+    height: 48,
   },
   input: {
     borderWidth: 1,
@@ -113,5 +116,6 @@ const styles = StyleSheet.create({
     color: 'white', 
     borderRadius: 10,
     width: WIDTH * .7,
+    height: 48
 }
 });
